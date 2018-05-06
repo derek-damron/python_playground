@@ -177,27 +177,27 @@ def test_search_two_matches():
 def test_delete_index_gt_length():
     with pytest.raises(ValueError) as excinfo:
         l = LinkedListSingly()
-        l.delete(0)
+        l.delete_index(0)
     assert 'index exceeds length' in str(excinfo.value)
     
 def test_delete_single_node():
     l = LinkedListSingly()
     l.put_tail(1)
-    l.delete(0)
+    l.delete_index(0)
     assert l.as_list() == []
 
 def test_delete_head():
     l = LinkedListSingly()
     l.put_tail(1)
     l.put_tail(2)
-    l.delete(0)
+    l.delete_head()
     assert l.as_list() == [2]
 
 def test_delete_tail():
     l = LinkedListSingly()
     l.put_tail(1)
     l.put_tail(2)
-    l.delete(1)
+    l.delete_tail()
     assert l.as_list() == [1]
 
 def test_delete_middle():
@@ -205,43 +205,43 @@ def test_delete_middle():
     l.put_tail(1)
     l.put_tail(2)
     l.put_tail(3)
-    l.delete(1)
+    l.delete_index(1)
     assert l.as_list() == [1, 3]
     
 #####
 # Get index value
 #
 
-def test_get_index_value_value_low():
+def test_get_value_index_value_low():
     with pytest.raises(ValueError) as excinfo:
         l = LinkedListSingly()
-        l.get_index_value(0)
+        l.get_value_index(0)
     assert 'index must be between 0 and the length of the linked list' in str(excinfo.value)
 
-def test_get_index_value_value_high():
+def test_get_value_index_value_high():
     with pytest.raises(ValueError) as excinfo:
         l = LinkedListSingly()
         l.put_tail(1)
-        l.get_index_value(1)
+        l.get_value_index(1)
     assert 'index must be between 0 and the length of the linked list' in str(excinfo.value)
     
-def test_get_index_value_head():
+def test_get_value_index_head():
     l = LinkedListSingly()
     l.put_tail(1)
     l.put_tail(2)
     l.put_tail(3)
-    assert l.get_index_value(0) == 1
+    assert l.get_value_index(0) == 1
     
-def test_get_index_value_tail():
+def test_get_value_index_tail():
     l = LinkedListSingly()
     l.put_tail(1)
     l.put_tail(2)
     l.put_tail(3)
-    assert l.get_index_value(2) == 3
+    assert l.get_value_index(2) == 3
     
-def test_get_index_value_middle():
+def test_get_value_index_middle():
     l = LinkedListSingly()
     l.put_tail(1)
     l.put_tail(2)
     l.put_tail(3)
-    assert l.get_index_value(1) == 2
+    assert l.get_value_index(1) == 2

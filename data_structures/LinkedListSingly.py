@@ -5,10 +5,12 @@ class Node:
         return
         
     def set_value(self, value):
+        """Set the value of the node"""
         self.value = value
         return
         
     def set_next(self, next):
+        """Set the next node in the list"""
         self.next = next
         return
         
@@ -18,6 +20,7 @@ class LinkedListSingly:
         return
         
     def get_tail(self):
+        """Get the last node"""
         if self.head is None:
             return self.head
         else:
@@ -27,6 +30,7 @@ class LinkedListSingly:
             return current
             
     def get_length(self):
+        """Get the length of the list"""
         current = self.head
         i = 0
         while current is not None:
@@ -35,6 +39,7 @@ class LinkedListSingly:
         return i
         
     def as_list(self):
+        """Return the node values as a Python list"""
         l = []
         if self.head is not None:
             current = self.head
@@ -44,6 +49,7 @@ class LinkedListSingly:
         return l
         
     def put_head(self, node):
+        """Insert a new node at the head"""
         if not isinstance(node, Node):
             node = Node(node)
         if self.head is None:
@@ -54,6 +60,7 @@ class LinkedListSingly:
         return
             
     def put_tail(self, node):
+        """Insert a new node at the tail"""
         if not isinstance(node, Node):
             node = Node(node)
         if self.head is None:
@@ -66,6 +73,7 @@ class LinkedListSingly:
         return
         
     def put_index(self, node, index):
+        """Insert a new node at the specified index"""
         if not isinstance(node, Node):
             node = Node(node)
         if index > self.get_length():
@@ -86,6 +94,7 @@ class LinkedListSingly:
         return
 
     def search(self, value):
+        """Search the list for a particular value, will return all instances that match"""
         i = 0
         l = []
         current = self.head
@@ -96,7 +105,18 @@ class LinkedListSingly:
             i += 1
         return l
         
-    def delete(self, index):
+    def delete_head(self):
+        """Delete the head node"""
+        self.delete_index(0)
+        return
+        
+    def delete_tail(self):
+        """Delete the tail node"""
+        self.delete_index(self.get_length() - 1)
+        return
+        
+    def delete_index(self, index):
+        """Delete the node at a specific index"""
         if index >= self.get_length():
             raise ValueError('index exceeds length')
         elif index == 0:
@@ -113,7 +133,8 @@ class LinkedListSingly:
             previous.set_next(current.next)
             return
         
-    def get_index_value(self, index):
+    def get_value_index(self, index):
+        """Get the node value at a specific index"""
         if index < 0 or index >= self.get_length():
             raise ValueError('index must be between 0 and the length of the linked list')
         i = 0
