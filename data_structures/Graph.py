@@ -90,9 +90,3 @@ class Graph:
                     shortest_path = new_path
         return shortest_path
         
-x = Graph()
-x.add_edge('a', 'b')
-x.add_edge('b', 'c')
-print(x.adj_list())
-x.delete_edge('a', 'b')
-print(x.adj_list())
