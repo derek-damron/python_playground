@@ -93,3 +93,39 @@ class Graph:
                     shortest_path = new_path
         return shortest_path
         
+    def dijkstras_algorithm(self, node):
+        # Initialize
+        nodes_left = set()
+        dist = {}
+        prev = {}        
+        for n in self._graph.keys():
+            nodes_left.add(n)
+            dist[n] = 999
+            prev[n] = None
+        dist[node] = 0
+        
+        # Loop through nodes
+        while nodes_left != set():
+            nodes_left_dist = {i:dist[i] for i in dist if i in nodes_left}
+            current_node = min(nodes_left_dist, key=nodes_left_dist.get)
+            nodes_left.remove(current_node)
+            for new_node, new_weight in self._graph[current_node]:
+                new_dist = dist[current_node] + new_weight
+                if new_dist < dist[new_node]:
+                    dist[new_node] = new_dist
+                    prev[new_node] = current_node
+        
+        # Package up results
+        out = {}
+        for n in self._graph.keys():
+            if n == node:
+                out[n] = ([], dist[n])
+            elif prev[n] == node:
+                out[n] = ([prev[n]], dist[n])
+            else:
+                path = [prev[n]]
+                while prev[path[0]] is not None:
+                    path = [prev[path[0]]] + path
+                out[n] = (path, dist[n])
+        
+        return out

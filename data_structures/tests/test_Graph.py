@@ -278,3 +278,92 @@ class Test_find_shortest_path_directed(object):
         
     def test_find_shortest_path_missing_node2(self, gsd):
         assert gsd.find_shortest_path('a', 'e') is None
+        
+#####
+# dijkstras_algorithm
+#
+
+@pytest.fixture()
+def gu_dij():
+    gu_dij = Graph()
+    gu_dij.add_edge('a', 'b', 10)
+    gu_dij.add_edge('a', 'c', 1)
+    gu_dij.add_edge('a', 'd', 2)
+    gu_dij.add_edge('b', 'c', 5)
+    gu_dij.add_edge('b', 'd', 2)
+    gu_dij.add_edge('c', 'd', 1)
+    return gu_dij
+
+class Test_dijkstras_algorithm_undirected(object):
+    def test_graph(self, gu_dij):
+        assert gu_dij._graph == {'a': {('b', 10), ('c', 1), ('d', 2)},
+                                 'b': {('a', 10), ('c', 5), ('d', 2)},
+                                 'c': {('a', 1), ('b', 5), ('d', 1)},
+                                 'd': {('a', 2), ('b', 2), ('c', 1)}}
+                                 
+    def test_a(self, gu_dij):
+        assert gu_dij.dijkstras_algorithm('a') == {'a': ([], 0),
+                                                   'b': (['a', 'd'], 2+2),
+                                                   'c': (['a'], 1),
+                                                   'd': (['a'], 2)}
+                                                   
+    def test_b(self, gu_dij):
+        assert gu_dij.dijkstras_algorithm('b') == {'a': (['b', 'd'], 2+2),
+                                                   'b': ([], 0),
+                                                   'c': (['b', 'd'], 2+1),
+                                                   'd': (['b'], 2)}
+                                                   
+    def test_c(self, gu_dij):
+        assert gu_dij.dijkstras_algorithm('c') == {'a': (['c'], 1),
+                                                   'b': (['c', 'd'], 1+2),
+                                                   'c': ([], 0),
+                                                   'd': (['c'], 1)}
+                                                   
+    def test_d(self, gu_dij):
+        assert gu_dij.dijkstras_algorithm('d') == {'a': (['d'], 2),
+                                                   'b': (['d'], 2),
+                                                   'c': (['d'], 1),
+                                                   'd': ([], 0)}
+
+@pytest.fixture()
+def gd_dij():
+    gd_dij = Graph(directed=True)
+    gd_dij.add_edge('a', 'b', 10)
+    gd_dij.add_edge('a', 'c', 1)
+    gd_dij.add_edge('a', 'd', 2)
+    gd_dij.add_edge('b', 'c', 5)
+    gd_dij.add_edge('b', 'd', 2)
+    gd_dij.add_edge('c', 'd', 1)
+    gd_dij.add_edge('d', 'a', 3)
+    return gd_dij
+
+class Test_dijkstras_algorithm_directed(object):
+    def test_graph(self, gd_dij):
+        assert gd_dij._graph == {'a': {('b', 10), ('c', 1), ('d', 2)},
+                                 'b': {('c', 5), ('d', 2)},
+                                 'c': {('d', 1)},
+                                 'd': {('a', 3)}}
+                                 
+    def test_a(self, gd_dij):
+        assert gd_dij.dijkstras_algorithm('a') == {'a': ([], 0),
+                                                   'b': (['a'], 10),
+                                                   'c': (['a'], 1),
+                                                   'd': (['a'], 2)}
+                                                   
+    def test_b(self, gd_dij):
+        assert gd_dij.dijkstras_algorithm('b') == {'a': (['b', 'd'], 2+3),
+                                                   'b': ([], 0),
+                                                   'c': (['b'], 5),
+                                                   'd': (['b'], 2)}
+                                                   
+    def test_c(self, gd_dij):
+        assert gd_dij.dijkstras_algorithm('c') == {'a': (['c', 'd'], 1+3),
+                                                   'b': (['c', 'd', 'a'], 1+3+10),
+                                                   'c': ([], 0),
+                                                   'd': (['c'], 1)}
+                                                   
+    def test_d(self, gd_dij):
+        assert gd_dij.dijkstras_algorithm('d') == {'a': (['d'], 3),
+                                                   'b': (['d', 'a'], 3+10),
+                                                   'c': (['d', 'a'], 3+1),
+                                                   'd': ([], 0)}
