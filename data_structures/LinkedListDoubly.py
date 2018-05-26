@@ -99,6 +99,19 @@ class LinkedListDoubly:
         if index > self_len:
             raise ValueError("index exceeds list length")
         return
+        
+    def get_value_index(self, index):
+        index = int(index)
+        if self._head is None:
+            raise ValueError("list is empty")
+        current_node = self._head
+        i = 0
+        while i < index:
+            if current_node._next is None:
+                raise ValueError("index exceeds list length")
+            current_node = current_node._next
+            i += 1            
+        return current_node._value
             
 x = LinkedListDoubly()
 print(x.get_length())
