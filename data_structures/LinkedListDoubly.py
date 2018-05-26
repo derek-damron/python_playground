@@ -21,32 +21,26 @@ class LinkedListDoubly:
         
     def get_length(self):
         out = 0
-        if self._head is not None:
-            current_node = self._head
+        current_node = self._head
+        while current_node is not None:
+            current_node = current_node._next
             out += 1
-            while current_node._next is not None:
-                current_node = current_node._next
-                out += 1
         return out
         
     def as_list_forward(self):
         out = []
-        if self._head is not None:
-            current_node = self._head
+        current_node = self._head
+        while current_node is not None:
             out += [current_node._value]
-            while current_node._next is not None:
-                current_node = current_node._next
-                out += [current_node._value]
+            current_node = current_node._next
         return out
         
     def as_list_backward(self):
         out = []
-        if self._tail is not None:
-            current_node = self._tail
+        current_node = self._tail
+        while current_node is not None:
             out = [current_node._value] + out
-            while current_node._prev is not None:
-                current_node = current_node._prev
-                out = [current_node._value] + out
+            current_node = current_node._prev
         return out
 
     def put_head(self, value):

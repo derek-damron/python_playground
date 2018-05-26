@@ -282,3 +282,17 @@ def test_delete_middle():
     l.delete(1)
     assert l.as_list_forward() == [1, 3]
     assert l.as_list_backward() == [1, 3]
+
+def test_delete_multiple():
+    l = LinkedListDoubly()
+    l.put_tail(1)
+    l.put_tail(2)
+    l.put_tail(3)
+    l.put_tail(4)
+    l.put_tail(5)
+    l.put_tail(6)
+    l.delete(0)
+    l.delete(2)
+    l.delete(3)
+    assert l.as_list_forward() == [2, 3, 5]
+    assert l.as_list_backward() == [2, 3, 5]
