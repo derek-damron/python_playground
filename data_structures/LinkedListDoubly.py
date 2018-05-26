@@ -123,3 +123,29 @@ class LinkedListDoubly:
             current_node = current_node._next
             i += 1
         return out
+
+    def delete(self, index):
+        if self._head is None:
+            raise ValueError("list is empty")
+        current_node = self._head
+        i = 0
+        while i < index:
+            if current_node is None:
+                raise ValueError("index exceeds list length")
+            current_node = current_node._next
+            i += 1
+        if current_node._prev is None and current_node._next is None:
+            self._head = None
+            self._tail = None
+        elif current_node._prev is None:
+            self._head = current_node._next
+            self._head.set_prev(None)
+        elif current_node._next is None:
+            self._tail = current_node._prev
+            self._tail.set_next(None)
+        else:
+            current_node._prev.set_next(current_node._next)
+            current_node._next.set_prev(current_node._prev)
+        return
+                
+        

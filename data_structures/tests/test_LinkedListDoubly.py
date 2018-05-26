@@ -233,42 +233,52 @@ def test_search_two_matches():
     l.put_tail(1)
     assert l.search(1) == [1, 3]
     
-######
-## Delete
-##
+#####
+# Delete
 #
-#def test_delete_index_gt_length():
-#    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListDoubly()
-#        l.delete_index(0)
-#    assert 'index exceeds length' in str(excinfo.value)
-#    
-#def test_delete_single_node():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.delete_index(0)
-#    assert l.as_list() == []
-#
-#def test_delete_head():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.delete_head()
-#    assert l.as_list() == [2]
-#
-#def test_delete_tail():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.delete_tail()
-#    assert l.as_list() == [1]
-#
-#def test_delete_middle():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    l.delete_index(1)
-#    assert l.as_list() == [1, 3]
-#    
-#
+
+def test_delete_index_gt_length():
+    with pytest.raises(ValueError) as excinfo:
+        l = LinkedListDoubly()
+        l.delete(0)
+    assert 'list is empty' in str(excinfo.value)
+
+def test_delete_index_gt_length():
+    with pytest.raises(ValueError) as excinfo:
+        l = LinkedListDoubly()
+        l.put_tail(1)
+        l.put_tail(2)
+        l.delete(5)
+    assert 'index exceeds list length' in str(excinfo.value)
+    
+def test_delete_single_node():
+    l = LinkedListDoubly()
+    l.put_tail(1)
+    l.delete(0)
+    assert l.as_list_forward() == []
+    assert l.as_list_backward() == []
+
+def test_delete_head():
+    l = LinkedListDoubly()
+    l.put_tail(1)
+    l.put_tail(2)
+    l.delete(0)
+    assert l.as_list_forward() == [2]
+    assert l.as_list_backward() == [2]
+
+def test_delete_tail():
+    l = LinkedListDoubly()
+    l.put_tail(1)
+    l.put_tail(2)
+    l.delete(1)
+    assert l.as_list_forward() == [1]
+    assert l.as_list_backward() == [1]
+
+def test_delete_middle():
+    l = LinkedListDoubly()
+    l.put_tail(1)
+    l.put_tail(2)
+    l.put_tail(3)
+    l.delete(1)
+    assert l.as_list_forward() == [1, 3]
+    assert l.as_list_backward() == [1, 3]
