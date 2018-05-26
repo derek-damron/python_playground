@@ -237,7 +237,7 @@ def test_search_two_matches():
 # Delete
 #
 
-def test_delete_index_gt_length():
+def test_delete_index_empty():
     with pytest.raises(ValueError) as excinfo:
         l = LinkedListDoubly()
         l.delete(0)
