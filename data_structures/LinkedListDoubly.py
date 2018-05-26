@@ -112,27 +112,14 @@ class LinkedListDoubly:
             current_node = current_node._next
             i += 1            
         return current_node._value
-            
-x = LinkedListDoubly()
-print(x.get_length())
-x.put_head(1)
-print(x.as_list_forward())
-print(x.as_list_backward())
-x.put_head(2)
-print(x.as_list_forward())
-print(x.as_list_backward())
-x.put_head(3)
-print(x.as_list_forward())
-print(x.as_list_backward())
-print(x.get_length())
-
-x.put_tail(1)
-print(x.as_list_forward())
-print(x.as_list_backward())
-x.put_tail(2)
-print(x.as_list_forward())
-print(x.as_list_backward())
-x.put_tail(3)
-print(x.as_list_forward())
-print(x.as_list_backward())
-print(x.get_length())
+        
+    def search(self, value):
+        out = []
+        current_node = self._head
+        i = 0
+        while current_node is not None:
+            if current_node._value == value:
+                out += [i]
+            current_node = current_node._next
+            i += 1
+        return out

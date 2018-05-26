@@ -204,31 +204,35 @@ def test_get_value_index_middle():
     l.put_tail(3)
     assert l.get_value_index(1) == 2
 
-######
-## Search
-##
+#####
+# Search
 #
-#def test_search_no_matches():
-#    l = LinkedListDoubly()
-#    l.put_head(2)
-#    l.put_head(3)
-#    assert l.search(1) == []
-#
-#def test_search_one_match():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    assert l.search(1) == [0]
-#
-#def test_search_two_matches():
-#    l = LinkedListDoubly()
-#    l.put_tail(2)
-#    l.put_tail(1)
-#    l.put_tail(3)
-#    l.put_tail(1)
-#    assert l.search(1) == [1, 3]
-#    
+
+def test_search_empty_list():
+    l = LinkedListDoubly()
+    assert l.search(1) == []
+
+def test_search_no_matches():
+    l = LinkedListDoubly()
+    l.put_head(2)
+    l.put_head(3)
+    assert l.search(1) == []
+
+def test_search_one_match():
+    l = LinkedListDoubly()
+    l.put_tail(1)
+    l.put_tail(2)
+    l.put_tail(3)
+    assert l.search(1) == [0]
+
+def test_search_two_matches():
+    l = LinkedListDoubly()
+    l.put_tail(2)
+    l.put_tail(1)
+    l.put_tail(3)
+    l.put_tail(1)
+    assert l.search(1) == [1, 3]
+    
 ######
 ## Delete
 ##
