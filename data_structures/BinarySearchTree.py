@@ -137,4 +137,28 @@ class BinarySearchTree(object):
         while current_node._left is not None:
             current_node = current_node._left
         return current_node
-                
+                                
+    def rebalance(self):
+        if self._root is None:
+            return
+        values = self.as_list()
+        new_tree = BinarySearchTree()
+        self._rebalance(new_tree, values)
+        self._root = new_tree._root
+        return
+    
+    def _rebalance(self, new_tree, values):
+        if len(values) == 1:
+            new_tree.insert(values[0])
+        elif len(values) > 1:
+            # Insert middle value
+            middle_value_index = int(len(values) / 2)
+            new_tree.insert(values[middle_value_index])
+            # Recurse over values left of middle value
+            values_left = values[:middle_value_index]
+            self._rebalance(new_tree, values_left)
+            # Recurse over values right of middle value
+            values_right = values[(middle_value_index + 1):]
+            self._rebalance(new_tree, values_right)
+        return
+        

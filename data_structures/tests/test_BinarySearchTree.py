@@ -238,3 +238,55 @@ class Test_delete(object):
                        ' 2' + '\n' + 
                        '  1' + '\n' + 
                        '   0' + '\n')
+#####
+# Rebalance
+#
+
+class Test_rebalance(object):
+    def test_empty_tree(self):
+        l = BinarySearchTree()
+        assert not l.rebalance()
+                
+    def test_unbalanced(self, capsys):
+        l = BinarySearchTree()
+        l.insert(5)
+        l.insert(5-3)
+        l.insert(5-4)
+        l.insert(5-5)
+        l.insert(5-1)
+        l.insert(5-2)
+        l.insert(5+3)
+        l.insert(5+4)
+        l.insert(5+5)
+        l.insert(5+1)
+        l.insert(5+2)
+        assert l.as_list() == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        l.print_as_tree()
+        out, err = capsys.readouterr()
+        assert out == ('   10' + '\n' +
+                       '  9' + '\n' +
+                       ' 8' + '\n' +
+                       '   7' + '\n' +
+                       '  6' + '\n' +
+                       '5' + '\n' +
+                       '  4' + '\n' +
+                       '   3' + '\n' + 
+                       ' 2' + '\n' + 
+                       '  1' + '\n' + 
+                       '   0' + '\n')  
+        l.rebalance()
+        assert l.as_list() == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        l.print_as_tree()
+        out, err = capsys.readouterr()
+        assert out == ('  10' + '\n' +
+                       '    9' + '\n' +
+                       ' 8' + '\n' +
+                       '  7' + '\n' +
+                       '   6' + '\n' +
+                       '5' + '\n' +
+                       '  4' + '\n' +
+                       '   3' + '\n' + 
+                       ' 2' + '\n' + 
+                       '  1' + '\n' + 
+                       '   0' + '\n')  
+ 
