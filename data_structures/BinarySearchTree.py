@@ -97,7 +97,7 @@ class BinarySearchTree(object):
             if current_node._right is None:
                 return False
             return self._search(value, current_node._right)
-                        
+            
     def delete(self, value):
         if self._root is None:
             return
@@ -137,7 +137,7 @@ class BinarySearchTree(object):
         while current_node._left is not None:
             current_node = current_node._left
         return current_node
-                                
+                
     def rebalance(self):
         if self._root is None:
             return
