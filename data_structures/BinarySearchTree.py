@@ -97,4 +97,44 @@ class BinarySearchTree(object):
             if current_node._right is None:
                 return False
             return self._search(value, current_node._right)
+                        
+    def delete(self, value):
+        if self._root is None:
+            return
+        return self._delete(value, self._root, None)
+    
+    def _delete(self, value, current_node, parent):
+        if value < current_node._value:
+            self._delete(value, current_node._left, current_node)
+        elif value > current_node._value:
+            self._delete(value, current_node._right, current_node)
+        if value == current_node._value:
+            # If no children then delete
+            if current_node._left is None and current_node._right is None:
+                if current_node == parent._left:
+                    parent._left = None
+                else:
+                    parent._right = None
+            # If only one child then replace with that child
+            elif current_node._left is None:
+                if current_node == parent._left:
+                    parent._left = current_node._right
+                else:
+                    parent._right = current_node._right
+            elif current_node._right is None:
+                if current_node == parent._left:
+                    parent._left = current_node._left
+                else:
+                    parent._right = current_node._left
+            # If two children then get the next highest value by finding the min of the right subtree
+            else:
+                replacement_node = self.find_min(current_node._right)
+                current_node._value = replacement_node._value
+                self._delete(replacement_node._value, current_node._right, current_node)
+        return
             
+    def find_min(self, current_node):
+        while current_node._left is not None:
+            current_node = current_node._left
+        return current_node
+                

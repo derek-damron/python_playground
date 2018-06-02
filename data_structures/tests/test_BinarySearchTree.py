@@ -161,4 +161,80 @@ class Test_search(object):
         l.insert(9)
         assert not l.search(1)
         assert not l.search(10)
-    
+        
+#####
+# Delete
+#
+
+class Test_delete(object):
+    def test_empty_tree(self):
+        l = BinarySearchTree()
+        assert not l.delete(1)
+                
+    def test_no_children(self, capsys):
+        l = BinarySearchTree()
+        l.insert(2)
+        l.insert(3)
+        l.insert(1)
+        l.delete(3)
+        l.delete(1)
+        assert l.as_list() == [2]
+        l.print_as_tree()
+        out, err = capsys.readouterr()
+        assert out == ('2' + '\n')
+                
+    def test_one_child(self, capsys):
+        l = BinarySearchTree()
+        l.insert(5)
+        l.insert(5-3)
+        l.insert(5-4)
+        l.insert(5-5)
+        l.insert(5-1)
+        l.insert(5-2)
+        l.insert(5+3)
+        l.insert(5+4)
+        l.insert(5+5)
+        l.insert(5+1)
+        l.insert(5+2)
+        l.delete(5-4)
+        l.delete(5-1)
+        l.delete(5+1)
+        l.delete(5+4)
+        assert l.as_list() == [0, 2, 3, 5, 7, 8, 10]
+        l.print_as_tree()
+        out, err = capsys.readouterr()
+        assert out == ('  10' + '\n' +
+                       ' 8' + '\n' +
+                       '  7' + '\n' +
+                       '5' + '\n' +
+                       '  3' + '\n' + 
+                       ' 2' + '\n' + 
+                       '  0' + '\n')
+                
+    def test_two_children(self, capsys):
+        l = BinarySearchTree()
+        l.insert(5)
+        l.insert(5-3)
+        l.insert(5-4)
+        l.insert(5-5)
+        l.insert(5-1)
+        l.insert(5-2)
+        l.insert(5+3)
+        l.insert(5+4)
+        l.insert(5+5)
+        l.insert(5+1)
+        l.insert(5+2)
+        l.delete(5)
+        assert l.as_list() == [0, 1, 2, 3, 4, 6, 7, 8, 9, 10]
+        l.print_as_tree()
+        out, err = capsys.readouterr()
+        assert out == ('   10' + '\n' +
+                       '  9' + '\n' +
+                       ' 8' + '\n' +
+                       '  7' + '\n' +
+                       '6' + '\n' +
+                       '  4' + '\n' +
+                       '   3' + '\n' + 
+                       ' 2' + '\n' + 
+                       '  1' + '\n' + 
+                       '   0' + '\n')
