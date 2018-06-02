@@ -162,3 +162,20 @@ class BinarySearchTree(object):
             self._rebalance(new_tree, values_right)
         return
         
+    def verify(self):
+        if self._root is None:
+            return
+        return self._verify(self._root)
+        
+    def _verify(self, current_node):
+        if current_node._left is not None:
+            if current_node._left._value > current_node._value:
+                return False
+            if not self._verify(current_node._left):
+                return False
+        if current_node._right is not None:
+            if current_node._value > current_node._right._value:
+                return False
+            if not self._verify(current_node._right):
+                return False
+        return True

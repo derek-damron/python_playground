@@ -289,4 +289,42 @@ class Test_rebalance(object):
                        ' 2' + '\n' + 
                        '  1' + '\n' + 
                        '   0' + '\n')  
- 
+ #####
+# Verify
+#
+
+@pytest.fixture()
+def bv():
+    bv = BinarySearchTree()
+    bv.insert(5)
+    bv.insert(3)
+    bv.insert(4)
+    bv.insert(2)
+    bv.insert(7)
+    bv.insert(8)
+    bv.insert(6)
+    return bv
+
+class Test_verify(object):
+    def test_empty_tree(self, bv):
+        l = BinarySearchTree()
+        assert not l.verify()
+                
+    def test_corret(self, bv):
+        assert bv.verify()
+                
+    def test_incorrect_left(self, bv):
+        bv._root._left._value = 10
+        assert not bv.verify()
+                
+    def test_incorrect_left_left(self, bv):
+        bv._root._left._left._value = 10
+        assert not bv.verify()
+                
+    def test_incorrect_right(self, bv):
+        bv._root._right._value = 0
+        assert not bv.verify()
+                
+    def test_incorrect_right_right(self, bv):
+        bv._root._right._right._value = 0
+        assert not bv.verify()
