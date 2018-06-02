@@ -127,3 +127,38 @@ class Test_insert(object):
             l.insert(1)
             l.insert(1)
         assert 'value already exists' in str(excinfo.value)
+
+#####
+# Search
+#
+
+class Test_search(object):
+    def test_empty_tree(self, capsys):
+        l = BinarySearchTree()
+        assert not l.search(1)
+        
+    def test_value_in_tree(self, capsys):
+        l = BinarySearchTree()
+        l.insert(5)
+        l.insert(4)
+        l.insert(3)
+        l.insert(2)
+        l.insert(7)
+        l.insert(8)
+        l.insert(9)
+        assert l.search(5)
+        assert l.search(2)
+        assert l.search(9)
+        
+    def test_value_not_in_tree(self, capsys):
+        l = BinarySearchTree()
+        l.insert(5)
+        l.insert(4)
+        l.insert(3)
+        l.insert(2)
+        l.insert(7)
+        l.insert(8)
+        l.insert(9)
+        assert not l.search(1)
+        assert not l.search(10)
+    

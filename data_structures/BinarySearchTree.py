@@ -81,3 +81,20 @@ class BinarySearchTree(object):
             right_height = current_height
         return max(left_height, right_height)
         
+    def search(self, value):
+        if self._root is None:
+            return False
+        return self._search(value, self._root)
+        
+    def _search(self, value, current_node):
+        if value == current_node._value:
+            return True
+        elif value < current_node._value:
+            if current_node._left is None:
+                return False
+            return self._search(value, current_node._left)
+        else:
+            if current_node._right is None:
+                return False
+            return self._search(value, current_node._right)
+            
