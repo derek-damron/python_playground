@@ -1,5 +1,5 @@
 import pytest
-from BinarySearchTree import *
+from ..BinarySearchTree import *
 
 #####
 # Node

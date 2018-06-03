@@ -1,5 +1,5 @@
 import pytest
-from Graph import *
+from ..Graph import *
 
 #####
 # Create graph

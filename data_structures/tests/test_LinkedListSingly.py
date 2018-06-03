@@ -1,5 +1,5 @@
 import pytest
-from LinkedListSingly import *
+from ..LinkedListSingly import *
 
 #####
 # Node

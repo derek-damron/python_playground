@@ -1,4 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
 branch = False
-omit = */tests/*
+omit = 
+    *__init__*
+    */tests/*

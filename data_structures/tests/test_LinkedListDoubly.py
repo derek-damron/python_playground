@@ -1,5 +1,5 @@
 import pytest
-from LinkedListDoubly import *
+from ..LinkedListDoubly import *
 
 #####
 # Node
