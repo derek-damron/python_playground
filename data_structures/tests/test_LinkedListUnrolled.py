@@ -121,6 +121,7 @@ def l_single():
 @pytest.fixture()
 def l_multiple():
     l = LinkedListUnrolled()
+    l.add_node_tail()
     l.put_tail(1)
     l.add_node_tail()
     l.put_tail(2)
@@ -167,34 +168,40 @@ class Test_as_list(object):
                                                                        [2,    3, None, None],
                                                                        [4, None, None, None]]
 
-######
-## Put methods
-##
+#####
+# Put methods
 #
-#def test_all_head():
-#    l = LinkedListDoubly()
-#    l.put_head(1)
-#    l.put_head(2)
-#    l.put_head(3)
-#    assert l.as_list_forward() == [3, 2, 1]
-#    assert l.as_list_backward() == [3, 2, 1]
-#
-#def test_all_tail():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    assert l.as_list_forward() == [1, 2, 3]
-#    assert l.as_list_backward() == [1, 2, 3]
-#
-#def test_mix_head_tail():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_head(2)
-#    l.put_tail(3)
-#    assert l.as_list_forward() == [2, 1, 3]
-#    assert l.as_list_backward() == [2, 1, 3]
-#
+
+def test_all_head():
+    l = LinkedListUnrolled()
+    l.put_head(1)
+    l.put_head(2)
+    l.put_head(3)
+    l.put_head(4)
+    l.put_head(5)
+    assert l.as_list() == [5, 4, 3, 2, 1]
+    assert l.as_list(nested=True) == [[5, 4, 3, 2], [1]]
+
+def test_all_tail():
+    l = LinkedListUnrolled()
+    l.put_tail(1)
+    l.put_tail(2)
+    l.put_tail(3)
+    l.put_tail(4)
+    l.put_tail(5)
+    assert l.as_list() == [1, 2, 3, 4, 5]
+    assert l.as_list(nested=True) == [[1, 2, 3, 4], [5]]
+
+def test_mix_head_tail():
+    l = LinkedListUnrolled()
+    l.put_head(1)
+    l.put_tail(2)
+    l.put_head(3)
+    l.put_tail(4)
+    l.put_head(5)
+    assert l.as_list() == [5, 3, 1, 2, 4]
+    assert l.as_list(nested=True) == [[5, 3, 1, 2], [4]]
+
 #def test_index_empty():
 #    l = LinkedListDoubly()
 #    l.put_index(1, index=0)

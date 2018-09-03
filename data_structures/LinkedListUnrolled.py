@@ -7,7 +7,7 @@ class NodeUnrolled:
         return
         
     def put_head(self, value):
-        """Puts value at the head of values"""
+        """Adds value at the head of values"""
         if self.num_elements == self.max_elements:
             raise IndexError('Node is full')
         self.values = [value] + self.values[:self.max_elements - 1]
@@ -15,7 +15,7 @@ class NodeUnrolled:
         return
         
     def put_tail(self, value):
-        """Puts value at the tail of values"""
+        """Adds value at the tail of values"""
         if self.num_elements == self.max_elements:
             raise IndexError('Node is full')
         self.values[self.num_elements] = value
@@ -23,7 +23,15 @@ class NodeUnrolled:
         return
         
     def put_index(self, value, index):
+        """Adds value at the specified index of values"""
         pass
+        
+    def pop_tail(self):
+        """Removes and returns the tail of values"""
+        self.num_elements -= 1
+        val = self.values.pop()
+        self.values += [None]
+        return val
         
     def as_list(self, remove_nones=True):
         if remove_nones:
@@ -38,12 +46,13 @@ class LinkedListUnrolled:
         
     def add_node_tail(self):
         if self.head is None:
-            self.head = NodeUnrolled()
+            current = self.head 
             return
         current = self.head
         while current.next is not None:
             current = current.next
-        current.next = NodeUnrolled()            
+        current.next = NodeUnrolled()
+        return
         
     def get_head(self):
         """Get the first value"""
@@ -83,19 +92,43 @@ class LinkedListUnrolled:
         return l
         
     def put_head(self, value):
-        pass
+        """Adds value to the beginning of the list (specifically the start of the head node)"""
+        if self.head is None:
+            self.head = NodeUnrolled()
+        current = self.head
+        self._put_head(value, current)
+        return
+        
+    def _put_head(self, value, current_node):
+        try:
+            current_node.put_head(value)
+        except IndexError:
+            value_for_next_node = current_node.pop_tail()
+            current_node.put_head(value)
+            if current_node.next is None:
+                current_node.next = NodeUnrolled()
+            self._put_head(value_for_next_node, current_node.next)
+        return
         
     def put_tail(self, value):
-        """Adds value to the end of the tail node"""
+        """Adds value to the end of the list (specifically the end of the tail node)"""
         if self.head is None:
             self.head = NodeUnrolled()
         current = self.head
         while current.next is not None:
             current = current.next
-        try:
-            current.put_tail(value)
-        except IndexError:
-            current.next = NodeUnrolled()
-            current.next.put_tail(value)
+        self._put_tail(value, current)
         return
+        
+    def _put_tail(self, value, current_node):
+        try:
+            current_node.put_tail(value)
+        except IndexError:
+            current_node.next = NodeUnrolled()
+            current_node.next.put_tail(value)
+        return
+        
+    def put_index(self, value, index):
+        """Adds value at the specified index of the list"""
+        pass
             
