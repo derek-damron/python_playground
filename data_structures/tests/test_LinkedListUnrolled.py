@@ -330,44 +330,6 @@ def test_mix_head_tail():
 #        l = LinkedListDoubly()
 #        l.put_index(1, index=1)
 #    assert 'index exceeds list length' in str(excinfo.value)
-#    
-######
-## Get index value
-##
-#
-#def test_get_value_index_value_low():
-#    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListDoubly()
-#        l.get_value_index(0)
-#    assert 'list is empty' in str(excinfo.value)
-#
-#def test_get_value_index_value_high():
-#    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListDoubly()
-#        l.put_tail(1)
-#        l.get_value_index(1)
-#    assert 'index exceeds list length' in str(excinfo.value)
-#    
-#def test_get_value_index_head():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    assert l.get_value_index(0) == 1
-#    
-#def test_get_value_index_tail():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    assert l.get_value_index(2) == 3
-#    
-#def test_get_value_index_middle():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    assert l.get_value_index(1) == 2
 #
 ######
 ## Search
