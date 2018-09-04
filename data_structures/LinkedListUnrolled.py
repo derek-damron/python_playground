@@ -9,7 +9,7 @@ class NodeUnrolled:
     def put_head(self, value):
         """Adds value at the head of values"""
         if self.num_elements == self.max_elements:
-            raise IndexError('Node is full')
+            raise IndexError('node is full')
         self.values = [value] + self.values[:self.max_elements - 1]
         self.num_elements += 1
         return
@@ -17,7 +17,7 @@ class NodeUnrolled:
     def put_tail(self, value):
         """Adds value at the tail of values"""
         if self.num_elements == self.max_elements:
-            raise IndexError('Node is full')
+            raise IndexError('node is full')
         self.values[self.num_elements] = value
         self.num_elements += 1
         return
@@ -25,11 +25,11 @@ class NodeUnrolled:
     def put_index(self, value, index):
         """Adds value at the specified index of values"""
         if self.num_elements == self.max_elements:
-            raise IndexError('Node is full')
+            raise IndexError('node is full')
         elif index < 0:
-            raise IndexError('Index must be >= 0')
+            raise IndexError('index must be >= 0')
         elif index >= self.max_elements:
-            raise IndexError('Index exceeds the number of maximum elements')
+            raise IndexError('index exceeds the number of maximum elements')
         index = int(index)
         if index == 0:
             self.put_head(value)
@@ -82,6 +82,27 @@ class LinkedListUnrolled:
         while current.next is not None:
             current = current.next
         return current.values[current.num_elements - 1]
+        
+    def get_index(self, index):
+        if index < 0:
+            raise IndexError('index must be >= 0')
+        if index == 0:
+            val = self.get_head()
+        else:
+            current = self.head
+            val = self._get_index(index, current)
+        return val 
+        
+    def _get_index(self, index, current_node):
+        if index < current_node.num_elements:
+            return current_node.values[index]
+        else:
+            if current_node.next is None:
+                raise IndexError('index exceeds list length')
+            index -= current_node.num_elements
+            current_node = current_node.next
+            val = self._get_index(index, current_node)
+        return val
             
     def get_length(self):
         """Get the length of the list"""

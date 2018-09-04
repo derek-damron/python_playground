@@ -50,7 +50,7 @@ class Test_put_node_head(object):
         with pytest.raises(IndexError) as excinfo:
             for i in range(5):
                 n.put_head(i)
-        assert 'Node is full' in str(excinfo.value)
+        assert 'node is full' in str(excinfo.value)
         
 class Test_put_node_tail(object):
     def test_1(self, n):
@@ -76,7 +76,7 @@ class Test_put_node_tail(object):
         with pytest.raises(IndexError) as excinfo:
             for i in range(5):
                 n.put_tail(i)
-        assert 'Node is full' in str(excinfo.value)
+        assert 'node is full' in str(excinfo.value)
         
 class Test_put_node_index(object):
     def test_1(self, n):
@@ -110,17 +110,17 @@ class Test_put_node_index(object):
         with pytest.raises(IndexError) as excinfo:
             for i in range(5):
                 n.put_index(i, i)
-        assert 'Node is full' in str(excinfo.value)
+        assert 'node is full' in str(excinfo.value)
         
     def test_index_less_than_0(self, n):
         with pytest.raises(IndexError) as excinfo:
             n.put_index(1, -1)
-        assert 'Index must be >= 0' in str(excinfo.value)
+        assert 'index must be >= 0' in str(excinfo.value)
         
     def test_index_greater_than_max_elements(self, n):
         with pytest.raises(IndexError) as excinfo:
             n.put_index(1, 4)
-        assert 'Index exceeds the number of maximum elements' in str(excinfo.value)
+        assert 'index exceeds the number of maximum elements' in str(excinfo.value)
         
 class Test_put_node_mixed(object):
     def test(self, n):
@@ -148,6 +148,9 @@ class Test_create_LinkedListUnrolled(object):
         
     def test_get_tail(self, l):
         assert l.get_tail() is None
+        
+    def test_get_index(self, l):
+        assert l.get_index(0) is None
         
     def test_get_length(self, l):
         assert l.get_length() == 0
@@ -186,6 +189,45 @@ class Test_get_head_and_tail(object):
         
     def test_get_tail_multiple(self, l_multiple):
         assert l_multiple.get_tail() == 4
+
+class Test_get_index(object):
+    def test_get_index_m1_single(self, l_single):
+        with pytest.raises(IndexError) as excinfo:
+            l_single.get_index(-1)
+        assert 'index must be >= 0' in str(excinfo.value)
+        
+    def test_get_index_0_single(self, l_single):
+        assert l_single.get_index(0) == 1
+        
+    def test_get_index_1_single(self, l_single):
+        assert l_single.get_index(1) == 2
+        
+    def test_get_index_2_single(self, l_single):
+        with pytest.raises(IndexError) as excinfo:
+            l_single.get_index(2)
+        assert 'index exceeds list length' in str(excinfo.value)
+        
+    def test_get_index_m1_multiple(self, l_multiple):
+        with pytest.raises(IndexError) as excinfo:
+            l_multiple.get_index(-1)
+        assert 'index must be >= 0' in str(excinfo.value)
+        
+    def test_get_index_0_multiple(self, l_multiple):
+        assert l_multiple.get_index(0) == 1
+        
+    def test_get_index_1_multiple(self, l_multiple):
+        assert l_multiple.get_index(1) == 2
+        
+    def test_get_index_2_multiple(self, l_multiple):
+        assert l_multiple.get_index(2) == 3
+        
+    def test_get_index_3_multiple(self, l_multiple):
+        assert l_multiple.get_index(3) == 4
+        
+    def test_get_index_4_multiple(self, l_multiple):
+        with pytest.raises(IndexError) as excinfo:
+            l_multiple.get_index(4)
+        assert 'index exceeds list length' in str(excinfo.value)
 
 class Test_get_length(object):
     def test_single(self, l_single):
