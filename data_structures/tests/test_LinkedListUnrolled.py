@@ -78,6 +78,50 @@ class Test_put_node_tail(object):
                 n.put_tail(i)
         assert 'Node is full' in str(excinfo.value)
         
+class Test_put_node_index(object):
+    def test_1(self, n):
+        n.put_index(1, 0)
+        assert n.as_list() == [1]
+        assert n.as_list(remove_nones=False) == [1] + [None] * 3
+        
+    def test_2(self, n):
+        n.put_index(1, 0)
+        n.put_index(2, 0)
+        n.put_index(3, 0)
+        assert n.as_list() == [3, 2, 1]
+        assert n.as_list(remove_nones=False) == [3, 2, 1] + [None]
+        
+    def test_3(self, n):
+        n.put_index(1, 0)
+        n.put_index(2, 1)
+        n.put_index(3, 2)
+        assert n.as_list() == [1, 2, 3]
+        assert n.as_list(remove_nones=False) == [1, 2, 3] + [None]
+        
+    def test_4(self, n):
+        n.put_index(1, 0)
+        n.put_index(2, 1)
+        n.put_index(3, 1)
+        n.put_index(4, 2)
+        assert n.as_list() == [1, 3, 4, 2]
+        assert n.as_list(remove_nones=False) == [1, 3, 4, 2]
+        
+    def test_full_node_error(self, n):
+        with pytest.raises(IndexError) as excinfo:
+            for i in range(5):
+                n.put_index(i, i)
+        assert 'Node is full' in str(excinfo.value)
+        
+    def test_index_less_than_0(self, n):
+        with pytest.raises(IndexError) as excinfo:
+            n.put_index(1, -1)
+        assert 'Index must be >= 0' in str(excinfo.value)
+        
+    def test_index_greater_than_max_elements(self, n):
+        with pytest.raises(IndexError) as excinfo:
+            n.put_index(1, 4)
+        assert 'Index exceeds the number of maximum elements' in str(excinfo.value)
+        
 class Test_put_node_mixed(object):
     def test(self, n):
         n.put_tail(1)

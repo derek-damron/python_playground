@@ -24,7 +24,21 @@ class NodeUnrolled:
         
     def put_index(self, value, index):
         """Adds value at the specified index of values"""
-        pass
+        if self.num_elements == self.max_elements:
+            raise IndexError('Node is full')
+        elif index < 0:
+            raise IndexError('Index must be >= 0')
+        elif index >= self.max_elements:
+            raise IndexError('Index exceeds the number of maximum elements')
+        index = int(index)
+        if index == 0:
+            self.put_head(value)
+        elif index == self.num_elements:
+            self.put_tail(value)
+        else:
+            self.values = self.values[:index] + [value] + self.values[index:self.max_elements - 1]
+            self.num_elements += 1
+        return
         
     def pop_tail(self):
         """Removes and returns the tail of values"""
