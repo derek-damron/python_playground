@@ -445,29 +445,6 @@ class Test_list_put_index_multiple(object):
         assert l_multiple.as_list() == [1, 0, -1, -2, -3, -4, -5, -6, -7, -8, 2, 3, 4]
         assert l_multiple.as_list(nested=True) == [[1, 0, -1, -2], [-3, -4, -5, -6], [-7, -8, 2, 3], [4]]
 
-#def test_mix_all():
-#    l = LinkedListUnrolled()
-#    l.put_head(1)
-#    l.put_tail(2)
-#    l.put_index(3, index=1)
-#    l.put_head(4)
-#    l.put_tail(5)
-#    l.put_index(6, index=3)
-#    assert l.as_list_forward() == [4, 1, 3, 6, 2, 5]
-#    assert l.as_list_backward() == [4, 1, 3, 6, 2, 5]
-#
-#def test_put_index_gt_0():
-#    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListUnrolled()
-#        l.put_index(1, index=-1)
-#    assert 'index must be >= 0' in str(excinfo.value)
-#
-#def test_put_index_gt_length():
-#    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListUnrolled()
-#        l.put_index(1, index=1)
-#    assert 'index exceeds list length' in str(excinfo.value)
-
 ######
 ## Search
 ##
