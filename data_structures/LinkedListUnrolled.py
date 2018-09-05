@@ -204,10 +204,22 @@ class LinkedListUnrolled:
         return
         
     def search(self, value):
-        """Searches for value in the list and returns the index if found, returns None otherwise"""
-        pass
+        """Searches for value in the list and returns all indices that match,
+           returns an empty list if no matches are found"""
+        i = 0
+        l = []
+        current = self.head
+        while current is not None:
+            for v in current.values:
+                if v is None:
+                    break
+                elif v == value:
+                    l += [i]
+                i += 1
+            current = current.next
+        return l
         
     def delete(self, value):
         """Deletes the value at the given index"""
-        pass
+        
             

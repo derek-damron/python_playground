@@ -445,35 +445,55 @@ class Test_list_put_index_multiple(object):
         assert l_multiple.as_list() == [1, 0, -1, -2, -3, -4, -5, -6, -7, -8, 2, 3, 4]
         assert l_multiple.as_list(nested=True) == [[1, 0, -1, -2], [-3, -4, -5, -6], [-7, -8, 2, 3], [4]]
 
-######
-## Search
-##
+#####
+# Search
 #
-#def test_search_empty_list():
-#    l = LinkedListDoubly()
-#    assert l.search(1) == []
-#
-#def test_search_no_matches():
-#    l = LinkedListDoubly()
-#    l.put_head(2)
-#    l.put_head(3)
-#    assert l.search(1) == []
-#
-#def test_search_one_match():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    assert l.search(1) == [0]
-#
-#def test_search_two_matches():
-#    l = LinkedListDoubly()
-#    l.put_tail(2)
-#    l.put_tail(1)
-#    l.put_tail(3)
-#    l.put_tail(1)
-#    assert l.search(1) == [1, 3]
-#    
+
+def test_search_empty_list():
+    l = LinkedListUnrolled()
+    assert l.search(1) == []
+
+class Test_search_single(object):
+    def test_no_matches(self, l_single):
+        assert l_single.search(0) == []
+
+    def test_one_match(self, l_single):
+        assert l_single.search(1) == [0]
+        assert l_single.search(2) == [1]
+
+    def test_multiple_matches(self):
+        l = LinkedListUnrolled()
+        l.put_head(1)
+        l.put_head(2)
+        l.put_head(1)
+        l.put_head(3)
+        l.put_head(1)
+        assert l.search(1) == [0, 2, 4]
+
+class Test_search_multiple(object):
+    def test_no_matches(self, l_multiple):
+        assert l_multiple.search(0) == []
+
+    def test_one_match(self, l_multiple):
+        assert l_multiple.search(1) == [0]
+        assert l_multiple.search(2) == [1]
+        assert l_multiple.search(3) == [2]
+        assert l_multiple.search(4) == [3]
+
+    def test_multiple_matches(self):
+        l = LinkedListUnrolled()
+        l.add_node_tail()
+        l.put_tail(1)
+        l.add_node_tail()
+        l.put_tail(2)
+        l.put_tail(1)
+        l.put_tail(3)
+        l.add_node_tail()
+        l.put_tail(4)
+        l.add_node_tail()
+        l.put_tail(1)
+        assert l.search(1) == [0, 2, 5]
+
 ######
 ## Delete
 ##
