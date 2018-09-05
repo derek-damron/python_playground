@@ -98,13 +98,21 @@ class Test_put_node_index(object):
         assert n.as_list() == [1, 2, 3]
         assert n.as_list(remove_nones=False) == [1, 2, 3] + [None]
         
-    def test_4(self, n):
+    def test_4_middle(self, n):
         n.put_index(1, 0)
         n.put_index(2, 1)
         n.put_index(3, 1)
         n.put_index(4, 2)
         assert n.as_list() == [1, 3, 4, 2]
         assert n.as_list(remove_nones=False) == [1, 3, 4, 2]
+        
+    def test_4_end(self, n):
+        n.put_index(1, 0)
+        n.put_index(2, 1)
+        n.put_index(3, 1)
+        n.put_index(4, 3)
+        assert n.as_list() == [1, 3, 2, 4]
+        assert n.as_list(remove_nones=False) == [1, 3, 2, 4]
         
     def test_full_node_error(self, n):
         with pytest.raises(IndexError) as excinfo:
@@ -121,6 +129,13 @@ class Test_put_node_index(object):
         with pytest.raises(IndexError) as excinfo:
             n.put_index(1, 4)
         assert 'index exceeds the number of maximum elements' in str(excinfo.value)
+        
+    def test_index_greater_than_num_elements(self, n):
+        with pytest.raises(IndexError) as excinfo:
+            n.put_index(1, 0)
+            n.put_index(2, 1)
+            n.put_index(3, 3)
+        assert 'index exceeds number of elements in the node' in str(excinfo.value)
         
 class Test_put_node_mixed(object):
     def test(self, n):
@@ -244,7 +259,6 @@ class Test_as_list(object):
         assert l_single.as_list(nested=True, remove_nones=False) == [[1, 2, None, None]]
         
     def test_multiple(self, l_multiple):
-        print(vars(l_multiple.head))
         assert l_multiple.as_list() == [1, 2, 3, 4]
         assert l_multiple.as_list(nested=True) == [[1], [2, 3], [4]]
         assert l_multiple.as_list(remove_nones = False) == [1, None, None, None,
@@ -287,29 +301,152 @@ def test_mix_head_tail():
     l.put_head(5)
     assert l.as_list() == [5, 3, 1, 2, 4]
     assert l.as_list(nested=True) == [[5, 3, 1, 2], [4]]
+    
+class Test_list_put_index_single(object):            
+    def test_empty(self):
+        l = LinkedListUnrolled()
+        l.put_index(1, index=0)
+        assert l.as_list() == [1]
+        assert l.as_list(nested=True) == [[1]]
+    
+    def test_m1(self, l_single):
+        with pytest.raises(IndexError) as excinfo:
+            l_single.put_index(3, index=-1)
+        assert 'index must be >= 0' in str(excinfo.value)
+    
+    def test_0(self, l_single):
+        l_single.put_index(3, index=0)
+        assert l_single.as_list() == [3, 1, 2]
+        assert l_single.as_list(nested=True) == [[3, 1, 2]]
+    
+    def test_1(self, l_single):
+        l_single.put_index(3, index=1)
+        assert l_single.as_list() == [1, 3, 2]
+        assert l_single.as_list(nested=True) == [[1, 3, 2]]
+    
+    def test_2(self, l_single):
+        l_single.put_index(3, index=2)
+        assert l_single.as_list() == [1, 2, 3]
+        assert l_single.as_list(nested=True) == [[1, 2, 3]]
+    
+    def test_3(self, l_single):
+        with pytest.raises(IndexError) as excinfo:
+            l_single.put_index(3, index=3)
+        assert 'index exceeds list length' in str(excinfo.value)
+    
+    def test_overflow_create_new_node(self, l_single):
+        l_single.put_index(3, index=2)
+        l_single.put_index(4, index=3)
+        l_single.put_index(5, index=4)
+        assert l_single.as_list() == [1, 2, 3, 4, 5]
+        assert l_single.as_list(nested=True) == [[1, 2, 3, 4], [5]]
+    
+class Test_list_put_index_multiple(object):    
+    def test_m1(self, l_multiple):
+        with pytest.raises(IndexError) as excinfo:
+            l_multiple.put_index(3, index=-1)
+        assert 'index must be >= 0' in str(excinfo.value)
+    
+    def test_0(self, l_multiple):
+        l_multiple.put_index(0, index=0)
+        assert l_multiple.as_list() == [0, 1, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[0, 1], [2, 3], [4]]
+    
+    def test_1(self, l_multiple):
+        l_multiple.put_index(0, index=1)
+        assert l_multiple.as_list() == [1, 0, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1, 0], [2, 3], [4]]
+    
+    def test_1_2x(self, l_multiple):
+        l_multiple.put_index(0, index=1)
+        l_multiple.put_index(-1, index=1)
+        assert l_multiple.as_list() == [1, -1, 0, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1, -1, 0], [2, 3], [4]]
+    
+    def test_2(self, l_multiple):
+        l_multiple.put_index(0, index=2)
+        assert l_multiple.as_list() == [1, 2, 0, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1], [2, 0, 3], [4]]
+    
+    def test_3(self, l_multiple):
+        l_multiple.put_index(0, index=3)
+        assert l_multiple.as_list() == [1, 2, 3, 0, 4]
+        assert l_multiple.as_list(nested=True) == [[1], [2, 3, 0], [4]]
+    
+    def test_4(self, l_multiple):
+        l_multiple.put_index(0, index=4)
+        assert l_multiple.as_list() == [1, 2, 3, 4, 0]
+        assert l_multiple.as_list(nested=True) == [[1], [2, 3], [4, 0]]
+    
+    def test_5(self, l_multiple):
+        with pytest.raises(IndexError) as excinfo:
+            l_multiple.put_index(3, index=5)
+        assert 'index exceeds list length' in str(excinfo.value)
+    
+    def test_overflow_1(self, l_multiple):
+        l_multiple.put_index(0, index=1)
+        l_multiple.put_index(-1, index=1)
+        l_multiple.put_index(-2, index=1)
+        l_multiple.put_index(-3, index=1)
+        assert l_multiple.as_list() == [1, -3, -2, -1, 0, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1, -3, -2, -1], [0, 2, 3], [4]]
+    
+    def test_overflow_1_2x(self, l_multiple):
+        l_multiple.put_index(0, index=1)
+        l_multiple.put_index(-1, index=1)
+        l_multiple.put_index(-2, index=1)
+        l_multiple.put_index(-3, index=1)
+        l_multiple.put_index(-4, index=1)
+        l_multiple.put_index(-5, index=1)
+        assert l_multiple.as_list() == [1, -5, -4, -3, -2, -1, 0, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1, -5, -4, -3], [-2, -1, 0, 2], [3, 4]]
+    
+    def test_overflow_1_3x(self, l_multiple):
+        l_multiple.put_index(0, index=1)
+        l_multiple.put_index(-1, index=1)
+        l_multiple.put_index(-2, index=1)
+        l_multiple.put_index(-3, index=1)
+        l_multiple.put_index(-4, index=1)
+        l_multiple.put_index(-5, index=1)
+        l_multiple.put_index(-6, index=1)
+        l_multiple.put_index(-7, index=1)
+        l_multiple.put_index(-8, index=1)
+        assert l_multiple.as_list() == [1, -8, -7, -6, -5, -4, -3, -2, -1, 0, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1,-8, -7, -6], [-5, -4, -3, -2], [-1, 0, 2, 3], [4]]
+    
+    def test_overflow_incremental_1(self, l_multiple):
+        l_multiple.put_index(0, index=1)
+        l_multiple.put_index(-1, index=2)
+        l_multiple.put_index(-2, index=3)
+        l_multiple.put_index(-3, index=4)
+        assert l_multiple.as_list() == [1, 0, -1, -2, -3, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1, 0, -1, -2], [-3, 2, 3], [4]]
+    
+    def test_overflow_incremental_2(self, l_multiple):
+        l_multiple.put_index(0, index=1)
+        l_multiple.put_index(-1, index=2)
+        l_multiple.put_index(-2, index=3)
+        l_multiple.put_index(-3, index=4)
+        l_multiple.put_index(-4, index=5)
+        l_multiple.put_index(-5, index=6)
+        assert l_multiple.as_list() == [1, 0, -1, -2, -3, -4, -5, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1, 0, -1, -2], [-3, -4, -5, 2], [3, 4]]
+    
+    def test_overflow_incremental_3(self, l_multiple):
+        l_multiple.put_index(0, index=1)
+        l_multiple.put_index(-1, index=2)
+        l_multiple.put_index(-2, index=3)
+        l_multiple.put_index(-3, index=4)
+        l_multiple.put_index(-4, index=5)
+        l_multiple.put_index(-5, index=6)
+        l_multiple.put_index(-6, index=7)
+        l_multiple.put_index(-7, index=8)
+        l_multiple.put_index(-8, index=9)
+        assert l_multiple.as_list() == [1, 0, -1, -2, -3, -4, -5, -6, -7, -8, 2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1, 0, -1, -2], [-3, -4, -5, -6], [-7, -8, 2, 3], [4]]
 
-#def test_index_empty():
-#    l = LinkedListDoubly()
-#    l.put_index(1, index=0)
-#    assert l.as_list_forward() == [1]
-#    assert l.as_list_backward() == [1]
-#
-#def test_index_head():
-#    l = LinkedListDoubly()
-#    l.put_head(1)
-#    l.put_index(2, index=0)
-#    assert l.as_list_forward() == [2, 1]
-#    assert l.as_list_backward() == [2, 1]
-#
-#def test_index_tail():
-#    l = LinkedListDoubly()
-#    l.put_head(1)
-#    l.put_index(2, index=1)
-#    assert l.as_list_forward() == [1, 2]
-#    assert l.as_list_backward() == [1, 2]
-#
 #def test_mix_all():
-#    l = LinkedListDoubly()
+#    l = LinkedListUnrolled()
 #    l.put_head(1)
 #    l.put_tail(2)
 #    l.put_index(3, index=1)
@@ -321,16 +458,16 @@ def test_mix_head_tail():
 #
 #def test_put_index_gt_0():
 #    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListDoubly()
+#        l = LinkedListUnrolled()
 #        l.put_index(1, index=-1)
 #    assert 'index must be >= 0' in str(excinfo.value)
 #
 #def test_put_index_gt_length():
 #    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListDoubly()
+#        l = LinkedListUnrolled()
 #        l.put_index(1, index=1)
 #    assert 'index exceeds list length' in str(excinfo.value)
-#
+
 ######
 ## Search
 ##

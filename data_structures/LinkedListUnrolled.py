@@ -33,11 +33,13 @@ class NodeUnrolled:
         index = int(index)
         if index == 0:
             self.put_head(value)
+        elif index < self.num_elements:
+            self.values = self.values[:index] + [value] + self.values[index:self.max_elements - 1]
+            self.num_elements += 1
         elif index == self.num_elements:
             self.put_tail(value)
         else:
-            self.values = self.values[:index] + [value] + self.values[index:self.max_elements - 1]
-            self.num_elements += 1
+            raise IndexError('index exceeds number of elements in the node')
         return
         
     def pop_tail(self):
@@ -165,5 +167,47 @@ class LinkedListUnrolled:
         
     def put_index(self, value, index):
         """Adds value at the specified index of the list"""
+        if index < 0:
+            raise IndexError('index must be >= 0')
+        if index == 0:
+            val = self.put_head(value)
+        elif index == self.get_length():
+            val = self.put_tail(value)
+        else:
+            current = self.head
+            self._put_index(value, index, current)        
+        return
+        
+    def _put_index(self, value, index, current_node):
+        if index <= current_node.num_elements and index < current_node.max_elements:
+            try:
+                current_node.put_index(value, index)
+            except IndexError:
+                self._overflow_to_next_node(value, index, current_node)
+        else:
+            if current_node.next is None:
+                raise IndexError('index exceeds list length')
+            index -= current_node.num_elements
+            current_node = current_node.next
+            self._put_index(value, index, current_node)
+        return
+        
+    def _overflow_to_next_node(self, value, index, current_node):
+        value_to_transfer = current_node.pop_tail()
+        current_node.put_index(value, index)
+        if current_node.next is None:
+            current_node.next = NodeUnrolled()
+        try:
+            current_node.next.put_head(value_to_transfer)
+        except IndexError:
+            self._overflow_to_next_node(value_to_transfer, 0, current_node.next)
+        return
+        
+    def search(self, value):
+        """Searches for value in the list and returns the index if found, returns None otherwise"""
+        pass
+        
+    def delete(self, value):
+        """Deletes the value at the given index"""
         pass
             
