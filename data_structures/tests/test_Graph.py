@@ -192,10 +192,12 @@ class Test_find_all_paths_undirected(object):
         assert gau._graph == {'a': {('b', 1), ('c', 4)}, 'b': {('a', 1), ('c', 2)}, 'c': {('b', 2), ('a', 4)}}
         
     def test_find_all_paths_forward(self, gau):
-        assert gau.find_all_paths('a', 'c') == [['a', 'b', 'c'], ['a', 'c']]
+        assert gau.find_all_paths('a', 'c') in [[['a', 'b', 'c'], ['a', 'c']],
+                                                [['a', 'c'], ['a', 'b', 'c']]]
         
     def test_find_all_paths_backward(self, gau):
-        assert gau.find_all_paths('c', 'a') == [['c', 'b', 'a'], ['c', 'a']]
+        assert gau.find_all_paths('c', 'a') in [[['c', 'b', 'a'], ['c', 'a']],
+                                                [['c', 'a'], ['c', 'b', 'a']]]
         
     def test_find_all_paths_missing_node1(self, gau):
         assert gau.find_all_paths('e', 'a') is None
@@ -216,7 +218,8 @@ class Test_find_all_paths_directed(object):
         assert gad._graph == {'a': {('b', 1), ('c', 4)}, 'b': {('c', 2)}}
         
     def test_find_all_paths_forward(self, gad):
-        assert gad.find_all_paths('a', 'c') == [['a', 'b', 'c'], ['a', 'c']]
+        assert gad.find_all_paths('a', 'c') in [[['a', 'b', 'c'], ['a', 'c']],
+                                                [['a', 'c'], ['a', 'b', 'c']]]
         
     def test_find_all_paths_backward(self, gad):
         assert gad.find_all_paths('c', 'a') is None
