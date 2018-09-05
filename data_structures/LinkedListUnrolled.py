@@ -49,6 +49,17 @@ class NodeUnrolled:
         self.values += [None]
         return val
         
+    def delete(self, index):
+        """Removes value at the specified index"""
+        if index < 0:
+            raise IndexError('index must be >= 0')
+        elif index >= self.num_elements:
+            raise IndexError('index exceeds the number of elements')
+        index = int(index)
+        self.values = [self.values[i] for i in range(self.max_elements) if i != index] + [None]
+        self.num_elements -= 1
+        return
+        
     def as_list(self, remove_nones=True):
         if remove_nones:
             return [i for i in self.values if i is not None]
@@ -219,7 +230,22 @@ class LinkedListUnrolled:
             current = current.next
         return l
         
-    def delete(self, value):
+    def delete(self, index):
         """Deletes the value at the given index"""
+        if self.get_length() == 0:
+            raise ValueError('list is empty')
+        elif index < 0:
+            raise IndexError('index must be >= 0')
+        current = self.head
+        self._delete(index, current)
+        return
         
-            
+    def _delete(self, index, current_node):
+        if index < current_node.num_elements:
+            current_node.delete(index)
+        else:
+            if current_node.next is None:
+                raise IndexError('index exceeds list length')
+            index -= current_node.num_elements
+            self._delete(index, current_node.next)
+        return

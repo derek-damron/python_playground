@@ -144,6 +144,72 @@ class Test_put_node_mixed(object):
         n.put_head(3)
         assert n.as_list() == [3, 1, 2]
         assert n.as_list(remove_nones=False) == [3, 1, 2, None]
+        
+class Test_node_delete(object):
+    def test_index_m1(self):
+        with pytest.raises(IndexError) as excinfo:
+            n = NodeUnrolled()
+            n.delete(-1)
+        assert 'index must be >= 0' in str(excinfo.value)
+        
+    def test_index_lone_element(self):
+        n = NodeUnrolled()
+        n.put_tail(1)
+        n.delete(0)
+        assert n.as_list() == []
+        assert n.as_list(remove_nones=False) == [None, None, None, None]
+        
+    def test_index_0(self):
+        n = NodeUnrolled()
+        n.put_tail(1)
+        n.put_tail(2)
+        n.delete(0)
+        assert n.as_list() == [2]
+        assert n.as_list(remove_nones=False) == [2, None, None, None]
+        
+    def test_index_1(self):
+        n = NodeUnrolled()
+        n.put_tail(1)
+        n.put_tail(2)
+        n.delete(1)
+        assert n.as_list() == [1]
+        assert n.as_list(remove_nones=False) == [1, None, None, None]
+        
+    def test_index_1(self):
+        n = NodeUnrolled()
+        n.put_tail(1)
+        n.put_tail(2)
+        n.delete(1)
+        assert n.as_list() == [1]
+        assert n.as_list(remove_nones=False) == [1, None, None, None]
+        
+    def test_index_2(self):
+        with pytest.raises(IndexError) as excinfo:
+            n = NodeUnrolled()
+            n.put_tail(1)
+            n.put_tail(2)
+            n.delete(2)
+        assert 'index exceeds the number of elements' in str(excinfo.value)
+        
+    def test_index_head(self):
+        n = NodeUnrolled()
+        n.put_tail(1)
+        n.put_tail(2)
+        n.put_tail(3)
+        n.put_tail(4)
+        n.delete(0)
+        assert n.as_list() == [2, 3, 4]
+        assert n.as_list(remove_nones=False) == [2, 3, 4, None]
+        
+    def test_index_tail(self):
+        n = NodeUnrolled()
+        n.put_tail(1)
+        n.put_tail(2)
+        n.put_tail(3)
+        n.put_tail(4)
+        n.delete(3)
+        assert n.as_list() == [1, 2, 3]
+        assert n.as_list(remove_nones=False) == [1, 2, 3, None]
 
 #####
 # LinkedListUnrolled
@@ -243,6 +309,23 @@ class Test_get_index(object):
         with pytest.raises(IndexError) as excinfo:
             l_multiple.get_index(4)
         assert 'index exceeds list length' in str(excinfo.value)
+        
+    def test_get_index_empty_first_node(self, l_multiple):
+        l = LinkedListUnrolled()
+        l.add_node_tail()
+        l.add_node_tail()
+        l.put_tail(1)
+        assert l.get_index(0) == 1
+        
+    def test_get_index_empty_second_node(self, l_multiple):
+        l = LinkedListUnrolled()
+        l.add_node_tail()
+        l.put_tail(1)
+        l.add_node_tail()
+        l.add_node_tail()
+        l.put_tail(2)
+        assert l.get_index(0) == 1
+        assert l.get_index(1) == 2
 
 class Test_get_length(object):
     def test_single(self, l_single):
@@ -494,66 +577,76 @@ class Test_search_multiple(object):
         l.put_tail(1)
         assert l.search(1) == [0, 2, 5]
 
-######
-## Delete
-##
+#####
+# Delete
 #
-#def test_delete_index_empty():
-#    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListDoubly()
-#        l.delete(0)
-#    assert 'list is empty' in str(excinfo.value)
-#
-#def test_delete_index_gt_length():
-#    with pytest.raises(ValueError) as excinfo:
-#        l = LinkedListDoubly()
-#        l.put_tail(1)
-#        l.put_tail(2)
-#        l.delete(5)
-#    assert 'index exceeds list length' in str(excinfo.value)
-#    
-#def test_delete_single_node():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.delete(0)
-#    assert l.as_list_forward() == []
-#    assert l.as_list_backward() == []
-#
-#def test_delete_head():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.delete(0)
-#    assert l.as_list_forward() == [2]
-#    assert l.as_list_backward() == [2]
-#
-#def test_delete_tail():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.delete(1)
-#    assert l.as_list_forward() == [1]
-#    assert l.as_list_backward() == [1]
-#
-#def test_delete_middle():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    l.delete(1)
-#    assert l.as_list_forward() == [1, 3]
-#    assert l.as_list_backward() == [1, 3]
-#
-#def test_delete_multiple():
-#    l = LinkedListDoubly()
-#    l.put_tail(1)
-#    l.put_tail(2)
-#    l.put_tail(3)
-#    l.put_tail(4)
-#    l.put_tail(5)
-#    l.put_tail(6)
-#    l.delete(0)
-#    l.delete(2)
-#    l.delete(3)
-#    assert l.as_list_forward() == [2, 3, 5]
-#    assert l.as_list_backward() == [2, 3, 5]
+
+def test_delete_index_empty():
+    with pytest.raises(ValueError) as excinfo:
+        l = LinkedListUnrolled()
+        l.delete(0)
+    assert 'list is empty' in str(excinfo.value)
+
+def test_delete_index_m1():
+    with pytest.raises(IndexError) as excinfo:
+        l = LinkedListUnrolled()
+        l.put_tail(1)
+        l.put_tail(2)
+        l.delete(-1)
+    assert 'index must be >= 0' in str(excinfo.value)
+
+def test_delete_index_gt_length():
+    with pytest.raises(IndexError) as excinfo:
+        l = LinkedListUnrolled()
+        l.put_tail(1)
+        l.put_tail(2)
+        l.delete(5)
+    assert 'index exceeds list length' in str(excinfo.value)
+
+class Test_delete_index_single(object):                
+    def test_0(self, l_single):
+        l_single.delete(0)
+        assert l_single.as_list() == [2]
+        assert l_single.as_list(nested=True) == [[2]]
+    
+    def test_1(self, l_single):
+        l_single.delete(1)
+        assert l_single.as_list() == [1]
+        assert l_single.as_list(nested=True) == [[1]]
+
+class Test_delete_index_multiple(object):                
+    def test_0(self, l_multiple):
+        l_multiple.delete(0)
+        assert l_multiple.as_list() == [2, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[], [2, 3], [4]]
+    
+    def test_1(self, l_multiple):
+        l_multiple.delete(1)
+        assert l_multiple.as_list() == [1, 3, 4]
+        assert l_multiple.as_list(nested=True) == [[1], [3], [4]]
+    
+    def test_2(self, l_multiple):
+        l_multiple.delete(2)
+        assert l_multiple.as_list() == [1, 2, 4]
+        assert l_multiple.as_list(nested=True) == [[1], [2], [4]]
+    
+    def test_3(self, l_multiple):
+        l_multiple.delete(3)
+        assert l_multiple.as_list() == [1, 2, 3]
+        assert l_multiple.as_list(nested=True) == [[1], [2, 3], []]
+    
+    def test_multiple(self, l_multiple):
+        l_multiple.delete(0)
+        l_multiple.delete(1)
+        assert l_multiple.as_list() == [2, 4]
+        assert l_multiple.as_list(nested=True) == [[], [2], [4]]
+    
+    def test_all_empty_nodes_plus_one(self, l_multiple):
+        with pytest.raises(ValueError) as excinfo:
+            l_multiple.delete(0)
+            l_multiple.delete(0)
+            l_multiple.delete(0)
+            l_multiple.delete(0)
+            l_multiple.delete(0)
+        assert 'list is empty' in str(excinfo.value)
+
