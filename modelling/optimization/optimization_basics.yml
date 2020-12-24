@@ -1,0 +1,10 @@
+name: opt_2
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7.9
+  - pyomo
+  - numpy
+  - matplotlib
+  - seaborn
+  - ipykernel
