@@ -1,4 +1,4 @@
-name: pytorch_cpu_1
+name: pytorch_cpu_2
 channels:
   - pytorch
   #- conda-forge
@@ -6,7 +6,7 @@ dependencies:
   - python=3.7.9
   - pytorch
   - cpuonly
-  #- torchvision
+  - torchvision
   #- torchaudio
   #- cudatoolkit=10.2
   - pandas
