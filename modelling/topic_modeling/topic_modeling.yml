@@ -9,3 +9,6 @@ dependencies:
   - ipykernel
   - nltk
   - gensim
+  - spacy
+  - conda-forge::wikipedia
+  - conda-forge::pyLDAvis
