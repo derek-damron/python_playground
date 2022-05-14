@@ -1,0 +1,13 @@
+name: topic_modeling
+dependencies:
+  - python=3.7.9
+  - pandas
+  - matplotlib
+  - seaborn
+  - jupyter
+  - ipykernel
+  - nltk
+  - gensim
+  - spacy
+  - conda-forge::wikipedia
+  - conda-forge::pyLDAvis
