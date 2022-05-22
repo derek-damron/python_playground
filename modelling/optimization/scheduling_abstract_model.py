@@ -51,17 +51,45 @@ def create():
     
     # Define constraints
     #    1) Each customer assigned to only 1 worker
-    def at_most_one_worker_per_customer(model, customer):
+    #    2) Each customer only assigned on a requested day
+    #    3) Each worker only assigned on a scheduled day
+    def one_worker_per_customer(model, customer):
         n_workers_assigned_to_customer = sum(
             model.assignments[worker, customer, day]
             for worker in model.workers
             for day in model.days
         )
-        return n_workers_assigned_to_customer <= 1
+        return n_workers_assigned_to_customer == 1
     
-    model.at_most_one_worker_per_customer = pyo.Constraint(
+    model.one_worker_per_customer = pyo.Constraint(
         model.customers,
-        rule = at_most_one_worker_per_customer
+        rule = one_worker_per_customer
+    )
+    
+    def customer_assigned_on_requested_day(model, customer):
+        assigned_on_requested_day = sum(
+            model.assignments[w, customer, d] * model.customer_requests[customer, d]
+            for w in model.workers
+            for d in model.days
+        )
+        return assigned_on_requested_day == 1
+    
+    model.customer_assigned_on_requested_day = pyo.Constraint(
+        model.customers,
+        rule = customer_assigned_on_requested_day
+    )
+    
+    def worker_assigned_on_scheduled_day(model, worker):
+        assigned_on_scheduled_day = sum(
+            model.assignments[worker, c, d] * model.worker_schedules[worker, d]
+            for c in model.customers
+            for d in model.days
+        )
+        return assigned_on_scheduled_day == 1
+    
+    model.worker_assigned_on_scheduled_day = pyo.Constraint(
+        model.workers,
+        rule = worker_assigned_on_scheduled_day
     )
     
     # Define our objective
