@@ -51,7 +51,6 @@ def create():
     
     # Define constraints
     #    1) Each customer assigned to only 1 worker
-
     def at_most_one_worker_per_customer(model, customer):
         n_workers_assigned_to_customer = sum(
             model.assignments[worker, customer, day]
@@ -59,7 +58,7 @@ def create():
             for day in model.days
         )
         return n_workers_assigned_to_customer <= 1
-
+    
     model.at_most_one_worker_per_customer = pyo.Constraint(
         model.customers,
         rule = at_most_one_worker_per_customer
@@ -67,16 +66,14 @@ def create():
     
     # Define our objective
     # -> Total number of matches
-
     def get_legit_matches(model):
         # Multiply assignments by the 
         legit_matches = [
             model.assignments[w, c, d] * model.worker_schedules[w, d] * model.customer_requests[c, d]
             for (w, c, d), p in model.assignments.items()
         ]
-
         return sum(legit_matches)
-
+    
     model.objective = pyo.Objective(
         rule = get_legit_matches,
         sense = pyo.maximize
