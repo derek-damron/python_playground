@@ -78,6 +78,7 @@ def create():
         rule = get_legit_matches,
         sense = pyo.maximize
     )
+    
     return model
 
 def get_matches(model):
