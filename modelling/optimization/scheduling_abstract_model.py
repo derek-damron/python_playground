@@ -50,20 +50,32 @@ def create():
     )
     
     # Define constraints
-    #    1) Each customer assigned to only 1 worker
+    #    1) Each customer assigned to exactly 1 worker
+    #    1.1) Each customer assigned to at most 1 worker (allows for partial solutions if 1 is deactivated)
     #    2) Each customer only assigned on a requested day
     #    3) Each worker only assigned on a scheduled day
-    def one_worker_per_customer(model, customer):
+    def exactly_one_worker_per_customer(model, customer):
         n_workers_assigned_to_customer = sum(
             model.assignments[worker, customer, day]
             for worker in model.workers
             for day in model.days
         )
         return n_workers_assigned_to_customer == 1
-    
-    model.one_worker_per_customer = pyo.Constraint(
+    model.exactly_one_worker_per_customer = pyo.Constraint(
         model.customers,
-        rule = one_worker_per_customer
+        rule = exactly_one_worker_per_customer
+    )
+    
+    def at_most_one_worker_per_customer(model, customer):
+        n_workers_assigned_to_customer = sum(
+            model.assignments[worker, customer, day]
+            for worker in model.workers
+            for day in model.days
+        )
+        return n_workers_assigned_to_customer <= 1
+    model.at_most_one_worker_per_customer = pyo.Constraint(
+        model.customers,
+        rule = at_most_one_worker_per_customer
     )
     
     def customer_assigned_on_requested_day(model, customer):
@@ -73,7 +85,6 @@ def create():
             for d in model.days
         )
         return assigned_on_requested_day == 1
-    
     model.customer_assigned_on_requested_day = pyo.Constraint(
         model.customers,
         rule = customer_assigned_on_requested_day
@@ -86,7 +97,6 @@ def create():
             for d in model.days
         )
         return assigned_on_scheduled_day == 1
-    
     model.worker_assigned_on_scheduled_day = pyo.Constraint(
         model.workers,
         rule = worker_assigned_on_scheduled_day
