@@ -137,7 +137,7 @@ def get_assignments(model):
     assignments = set()
     for k, v in model.assignments.get_values().items():
         if v == 1:
-            assignments.add(combo)
+            assignments.add(k)
     return assignments
 
 def get_all_solutions(model):
@@ -148,12 +148,12 @@ def get_all_solutions(model):
 
     while True:
         expr = 0
-        for j in model.assignments:
-            if pyo.value(model.assignments[j]) == 0:
-                expr += model.assignments[j]
+        for a in model.assignments:
+            if pyo.value(model.assignments[a]) == 0:
+                expr += model.assignments[a]
             else:
-                expr += (1 - model.assignments[j])
-        model.c.add( expr >= 1 )
+                expr += (1 - model.assignments[a])
+        model.c.add(expr >= 1)
         results = solver.solve(model)
         if get_assignments(model) in solutions:
             break
