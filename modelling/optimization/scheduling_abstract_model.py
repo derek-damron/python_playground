@@ -52,8 +52,9 @@ def create():
     # Define constraints
     #    1) Each customer assigned to exactly 1 worker
     #    1.1) Each customer assigned to at most 1 worker (allows for partial solutions if 1 is deactivated)
-    #    2) Each customer only assigned on a requested day
-    #    3) Each worker only assigned on a scheduled day
+    #    2) Each worker customer only assigned to 1 customer
+    #    3) Each customer only assigned on a requested day
+    #    4) Each worker only assigned on a scheduled day
     
     def exactly_one_worker_per_customer(model, customer):
         n_workers_assigned_to_customer = sum(
@@ -116,28 +117,28 @@ def create():
     )
     
     # Define our objective
-    # -> Total number of matches
-    def get_legit_matches(model):
+    # -> Total number of assignments
+    def get_assignments(model):
         # Multiply assignments by the 
-        legit_matches = [
+        assignments = [
             model.assignments[w, c, d] * model.worker_schedules[w, d] * model.customer_requests[c, d]
             for (w, c, d), p in model.assignments.items()
         ]
-        return sum(legit_matches)
+        return sum(assignments)
     
     model.objective = pyo.Objective(
-        rule = get_legit_matches,
+        rule = get_assignments,
         sense = pyo.maximize
     )
     
     return model
 
-def get_matches(model):
-    matches = set()
-    for combo, matched in model.assignments.get_values().items():
-        if matched == 1:
-            matches.add(combo)
-    return matches
+def get_assignments(model):
+    assignments = set()
+    for k, v in model.assignments.get_values().items():
+        if v == 1:
+            assignments.add(combo)
+    return assignments
 
 def get_all_solutions(model):
     solver = pyo.SolverFactory("glpk")
@@ -154,8 +155,8 @@ def get_all_solutions(model):
                 expr += (1 - model.assignments[j])
         model.c.add( expr >= 1 )
         results = solver.solve(model)
-        if get_matches(model) in solutions:
+        if get_assignments(model) in solutions:
             break
-        solutions.add(frozenset(get_matches(model)))
+        solutions.add(frozenset(get_assignments(model)))
 
     return solutions
