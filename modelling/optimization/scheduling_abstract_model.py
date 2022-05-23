@@ -54,6 +54,7 @@ def create():
     #    1.1) Each customer assigned to at most 1 worker (allows for partial solutions if 1 is deactivated)
     #    2) Each customer only assigned on a requested day
     #    3) Each worker only assigned on a scheduled day
+    
     def exactly_one_worker_per_customer(model, customer):
         n_workers_assigned_to_customer = sum(
             model.assignments[worker, customer, day]
@@ -68,9 +69,9 @@ def create():
     
     def at_most_one_worker_per_customer(model, customer):
         n_workers_assigned_to_customer = sum(
-            model.assignments[worker, customer, day]
-            for worker in model.workers
-            for day in model.days
+            model.assignments[w, customer, d]
+            for w in model.workers
+            for d in model.days
         )
         return n_workers_assigned_to_customer <= 1
     model.at_most_one_worker_per_customer = pyo.Constraint(
@@ -78,28 +79,40 @@ def create():
         rule = at_most_one_worker_per_customer
     )
     
-    def customer_assigned_on_requested_day(model, customer):
-        assigned_on_requested_day = sum(
-            model.assignments[w, customer, d] * model.customer_requests[customer, d]
-            for w in model.workers
-            for d in model.days
-        )
-        return assigned_on_requested_day == 1
-    model.customer_assigned_on_requested_day = pyo.Constraint(
-        model.customers,
-        rule = customer_assigned_on_requested_day
-    )
-    
-    def worker_assigned_on_scheduled_day(model, worker):
-        assigned_on_scheduled_day = sum(
-            model.assignments[worker, c, d] * model.worker_schedules[worker, d]
+    def at_most_one_customer_per_worker(model, worker):
+        n_customers_assigned_to_worker = sum(
+            model.assignments[worker, c, d]
             for c in model.customers
             for d in model.days
         )
-        return assigned_on_scheduled_day == 1
-    model.worker_assigned_on_scheduled_day = pyo.Constraint(
+        return n_customers_assigned_to_worker <= 1
+    model.at_most_one_customer_per_worker = pyo.Constraint(
         model.workers,
-        rule = worker_assigned_on_scheduled_day
+        rule = at_most_one_customer_per_worker
+    )
+
+    def customer_assigned_on_nonrequested_day(model, customer):
+        assigned_on_nonrequested_day = sum(
+            model.assignments[w, customer, d] * (1 - model.customer_requests[customer, d])
+            for w in model.workers
+            for d in model.days
+        )
+        return assigned_on_nonrequested_day == 0
+    model.customer_assigned_on_nonrequested_day = pyo.Constraint(
+        model.customers,
+        rule = customer_assigned_on_nonrequested_day
+    )
+
+    def worker_assigned_on_nonscheduled_day(model, worker):
+        assigned_on_nonscheduled_day = sum(
+            model.assignments[worker, c, d] * (1 - model.worker_schedules[worker, d])
+            for c in model.customers
+            for d in model.days
+        )
+        return assigned_on_nonscheduled_day == 0
+    model.worker_assigned_on_nonscheduled_day = pyo.Constraint(
+        model.workers,
+        rule = worker_assigned_on_nonscheduled_day
     )
     
     # Define our objective
@@ -125,3 +138,24 @@ def get_matches(model):
         if matched == 1:
             matches.add(combo)
     return matches
+
+def get_all_solutions(model):
+    solver = pyo.SolverFactory("glpk")
+    
+    model.c = pyo.ConstraintList()
+    solutions = set()
+
+    while True:
+        expr = 0
+        for j in model.assignments:
+            if pyo.value(model.assignments[j]) == 0:
+                expr += model.assignments[j]
+            else:
+                expr += (1 - model.assignments[j])
+        model.c.add( expr >= 1 )
+        results = solver.solve(model)
+        if get_matches(model) in solutions:
+            break
+        solutions.add(frozenset(get_matches(model)))
+
+    return solutions
