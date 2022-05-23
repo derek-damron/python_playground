@@ -51,7 +51,8 @@ def create():
     
     # Define constraints
     #    1) Each customer assigned to exactly 1 worker
-    #    1.1) Each customer assigned to at most 1 worker (allows for partial solutions if 1 is deactivated)
+    #    1.1) Each customer assigned to at most 1 worker (redundant when paired with 1, but
+    #         allows for partial solutions if 1 is deactivated)
     #    2) Each worker customer only assigned to 1 customer
     #    3) Each customer only assigned on a requested day
     #    4) Each worker only assigned on a scheduled day
