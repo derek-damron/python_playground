@@ -122,7 +122,7 @@ def create():
     def get_assignments(model):
         # Multiply assignments by the 
         assignments = [
-            model.assignments[w, c, d] * model.worker_schedules[w, d] * model.customer_requests[c, d]
+            model.assignments[w, c, d]
             for (w, c, d), p in model.assignments.items()
         ]
         return sum(assignments)
