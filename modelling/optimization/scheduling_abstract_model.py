@@ -1,4 +1,8 @@
 import pyomo.environ as pyo
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def create():
     workers = (
@@ -161,3 +165,62 @@ def get_all_solutions(model):
         solutions.add(frozenset(get_assignments(model)))
 
     return solutions
+
+def plot_worker_schedules(model):
+    # Create df
+    df = pd.DataFrame(
+        data=[
+            (w, d, s)
+            for (w, d), s in model.worker_schedules.items()
+        ],
+        columns = ['Worker', 'Day', 'Scheduled']
+    )
+
+    sns.heatmap(df.pivot('Day', 'Worker', 'Scheduled'))
+
+    return
+
+def plot_customer_requests(model):
+    # Create df
+    df = pd.DataFrame(
+        data=[
+            (c, d, s)
+            for (c, d), s in model.customer_requests.items()
+        ],
+        columns = ['Customer', 'Day', 'Scheduled']
+    )
+
+    sns.heatmap(df.pivot('Day', 'Customer', 'Scheduled'))
+
+    return
+
+def plot_assignments(model):
+    # Create df
+    df = pd.DataFrame(
+        data=[
+            (w, c, d, pyo.value(s))
+            for (w, c, d), s in model.assignments.items()
+        ],
+        columns = ['Worker', 'Customer', 'Day', 'Scheduled']
+    )
+
+    def draw_heatmap(*args, **kwargs):
+        data = kwargs.pop('data')
+        d = data.pivot(args[0], args[1], args[2])
+        sns.heatmap(
+            d,
+            vmin=0, vmax=1,
+            **kwargs
+        )
+
+    g = sns.FacetGrid(
+        df,
+        col='Day',
+        col_wrap=4,
+        col_order=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        sharex=False, sharey=False,
+    )
+    g.map_dataframe(draw_heatmap, 'Worker', 'Customer', 'Scheduled')
+    
+    return
+        
