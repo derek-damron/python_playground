@@ -14,4 +14,11 @@ class TestAlgo1(object):
     def test_score(self):
         a = Algo1()
         a.get()
-        assert a.score() == 11
+        a.score()
+        assert a.score_data == 11
+
+    def test_run(self):
+        a = Algo1()
+        a.run()
+        assert a.get_data == {'a': 1, 'b': 10}
+        assert a.score_data == 11

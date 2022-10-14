@@ -14,4 +14,11 @@ class TestAlgo2(object):
     def test_score(self):
         a = Algo2()
         a.get()
-        assert a.score() == 220
+        a.score()
+        assert a.score_data == 220
+
+    def test_run(self):
+        a = Algo2()
+        a.run()
+        assert a.get_data == {'b': 10, 'c': 100}
+        assert a.score_data == 220

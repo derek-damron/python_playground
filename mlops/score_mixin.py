@@ -3,4 +3,5 @@ class ScoreMixin(object):
         s = 0
         for k, v in self.get_data.items():
             s += v
-        return s
+        self.score_data = s
+        return

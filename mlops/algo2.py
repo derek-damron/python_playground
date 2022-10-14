@@ -14,5 +14,6 @@ class Algo2(
 
     # Modify "default" scoring function
     def score(self):
-        s = super().score()
-        return s * 2
+        super().score()
+        self.score_data *= 2
+        return
