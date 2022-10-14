@@ -1,13 +1,17 @@
 from algo_mixin import AlgoMixin
-from score_mixin import ScoreMixin
-from get_mixin import GetMixin, GetA, GetB
+from get import GetMixin, GetA, GetB
+from model import ModelMixin, Model1
 
 class Algo1(
     GetMixin,
     GetA,
     GetB,
-    ScoreMixin,
+    ModelMixin,
+    Model1,
     AlgoMixin
 ):
     def __init__(self):
         super().__init__()
+
+    def score(self):
+        self.score_data = self.predict_data['model1'] + 2
