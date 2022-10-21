@@ -13,4 +13,4 @@ class Algo2(
         super().__init__()
 
     def score(self):
-        self.score_data = self.predict_data['model2'] + self.predict_data['model3'] + 3
+        self.score_data = self.predict_data['model2'] + self.predict_data['model3_post'] + 3

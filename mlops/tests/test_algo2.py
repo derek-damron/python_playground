@@ -1,6 +1,7 @@
 import pytest
 from algo2 import Algo2
 
+
 class TestAlgo2(object):
     def test_initialize(self):
         a = Algo2()
@@ -17,7 +18,7 @@ class TestAlgo2(object):
         a = Algo2()
         a.get()
         a.predict()
-        assert a.predict_data == {'model2': 20, 'model3': 300}
+        assert a.predict_data == {'model2': 20, 'model3_pre': 9, 'model3': 100, 'model3_post': 300}
 
     def test_score(self):
         a = Algo2()
@@ -30,5 +31,5 @@ class TestAlgo2(object):
         a = Algo2()
         a.run()
         assert a.get_data == {'b': 10, 'c': 100}
-        assert a.predict_data == {'model2': 20, 'model3': 300}
+        assert a.predict_data == {'model2': 20, 'model3_pre': 9, 'model3': 100, 'model3_post': 300}
         assert a.score_data == 323
