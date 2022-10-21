@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class AlgoMixin(ABC):
+class AlgoBase(ABC):
     def __init__(self):
         self.get_data = dict()
         self.predict_data = dict()

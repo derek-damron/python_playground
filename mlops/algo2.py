@@ -1,15 +1,13 @@
-from algo_mixin import AlgoMixin
-from get import GetMixin, GetB, GetC
+from algo_base import AlgoBase
+from get import GetB, GetC
 from model import ModelMixin, Model2, Model3
 
 class Algo2(
-    GetMixin,
     GetB,
     GetC,
-    ModelMixin,
     Model2,
     Model3,
-    AlgoMixin,
+    AlgoBase,
 ):
     def __init__(self):
         super().__init__()
