@@ -1,11 +1,10 @@
 from algo_base import AlgoBase
 from get import GetA, GetB
-from model import ModelMixin, Model1
+from model import Model1
 
 class Algo1(
     GetA,
     GetB,
-    ModelMixin,
     Model1,
     AlgoBase
 ):

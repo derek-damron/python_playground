@@ -1,6 +1,6 @@
 from algo_base import AlgoBase
 from get import GetB, GetC
-from model import ModelMixin, Model2, Model3
+from model import Model2, Model3
 
 class Algo2(
     GetB,
