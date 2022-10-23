@@ -2,11 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class GetBase(ABC):
-    def __init__(self):
-        self.get_data = dict()
-        self.predict_data = dict()
-        self.score_data = None
-
     @property
     @abstractmethod
     def source(self):
