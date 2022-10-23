@@ -6,7 +6,7 @@ class TestAlgo2(object):
     def test_initialize(self):
         a = Algo2()
         assert a.get_data == dict()
-        assert a.predict_data == dict()
+        assert a.model_data == dict()
         assert a.score_data == None
 
     def test_get(self):
@@ -17,13 +17,13 @@ class TestAlgo2(object):
     def test_predict(self):
         a = Algo2()
         a.get()
-        a.predict()
-        assert a.predict_data == {'model2': 20, 'model3_pre': 9, 'model3': 100, 'model3_post': 300}
+        a.model()
+        assert a.model_data == {'model2': 20, 'model3_pre': 9, 'model3': 100, 'model3_post': 300}
 
     def test_score(self):
         a = Algo2()
         a.get()
-        a.predict()
+        a.model()
         a.score()
         assert a.score_data == 323
 
@@ -31,5 +31,5 @@ class TestAlgo2(object):
         a = Algo2()
         a.run()
         assert a.get_data == {'b': 10, 'c': 100}
-        assert a.predict_data == {'model2': 20, 'model3_pre': 9, 'model3': 100, 'model3_post': 300}
+        assert a.model_data == {'model2': 20, 'model3_pre': 9, 'model3': 100, 'model3_post': 300}
         assert a.score_data == 323

@@ -8,38 +8,38 @@ class ModelBase(ABC):
         pass
 
     @abstractmethod
-    def predict(self):
-        # Should append to self.predict_data and return nothing
+    def model(self):
+        # Should append to self.model_data and return nothing
         pass
 
 
-class Model1(ModelBase):
+class Model1(ModelBase): 
     def source(self):
         return 'https://www.model.com/1'
 
-    def predict(self):
-        self.predict_data['model1'] = self.get_data['a'] + 2 * self.get_data['b']
-        super().predict()
+    def model(self):
+        self.model_data['model1'] = self.get_data['a'] + 2 * self.get_data['b']
+        super().model()
 
 
 class Model2(ModelBase):
     def source(self):
         return 'https://www.model.com/2'
 
-    def predict(self):
-        self.predict_data['model2'] = 2 * self.get_data['b']
-        super().predict()
+    def model(self):
+        self.model_data['model2'] = 2 * self.get_data['b']
+        super().model()
 
 
 class Model3(ModelBase):
     def source(self):
         return 'https://www.model.com/3'
 
-    def predict(self):
-        self._pre_predict()
-        self._predict()
-        self._post_predict()
-        super().predict()
+    def model(self):
+        self._pre_model()
+        self._model()
+        self._post_model()
+        super().model()
 
     @staticmethod
     def z_score(x):
@@ -49,11 +49,11 @@ class Model3(ModelBase):
     def z_score_inverse(x):
         return 10 * x + 10
 
-    def _pre_predict(self):
-        self.predict_data['model3_pre'] = self.z_score(self.get_data['c'])
+    def _pre_model(self):
+        self.model_data['model3_pre'] = self.z_score(self.get_data['c'])
 
-    def _predict(self):
-        self.predict_data['model3'] = self.z_score_inverse(self.predict_data['model3_pre'])
+    def _model(self):
+        self.model_data['model3'] = self.z_score_inverse(self.model_data['model3_pre'])
 
-    def _post_predict(self):
-        self.predict_data['model3_post'] = self.predict_data['model3'] * 3
+    def _post_model(self):
+        self.model_data['model3_post'] = self.model_data['model3'] * 3

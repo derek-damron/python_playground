@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 class AlgoBase(ABC):
     def __init__(self):
         self.get_data = dict()
-        self.predict_data = dict()
+        self.model_data = dict()
         self.score_data = None
 
     @abstractmethod
@@ -13,8 +13,8 @@ class AlgoBase(ABC):
         pass
 
     @abstractmethod
-    def predict(self):
-        # Should append to self.predict_data and return nothing
+    def model(self):
+        # Should append to self.model_data and return nothing
         pass
 
     @abstractmethod
@@ -24,6 +24,6 @@ class AlgoBase(ABC):
 
     def run(self):
         self.get()
-        self.predict()
+        self.model()
         self.score()
         return

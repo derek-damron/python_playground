@@ -12,4 +12,4 @@ class Algo1(
         super().__init__()
 
     def score(self):
-        self.score_data = self.predict_data['model1'] + 2
+        self.score_data = self.model_data['model1'] + 2
