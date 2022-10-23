@@ -14,6 +14,7 @@ class GetBase(ABC):
 
 
 class GetA(GetBase):
+    @property
     def source(self):
         return 'https://www.data.com/a'
 
@@ -23,6 +24,7 @@ class GetA(GetBase):
 
 
 class GetB(GetBase):
+    @property
     def source(self):
         return 'https://www.data.com/b'
 
@@ -32,6 +34,7 @@ class GetB(GetBase):
 
 
 class GetC(GetBase):
+    @property
     def source(self):
         return 'https://www.data.com/c'
 
